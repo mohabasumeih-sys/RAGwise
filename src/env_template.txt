@@ -1,0 +1,6 @@
+GROK_API_KEY="YOUR_API_KEY"
+PDF_1_NAME=pdf/Agentic_AI
+PDF_2_NAME=pdf/Deep_Learning
+PDF_3_NAME=pdf/Large_Language_Model
+PDF_4_NAME=pdf/Machine_learning
+PDF_5_NAME=pdf/Natural_language_Processing
