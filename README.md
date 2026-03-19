@@ -1,17 +1,17 @@
-# RAGwise
+# 📚 RAGwise
 
-> A local RAG (Retrieval-Augmented Generation) chatbot that lets you ask questions about AI/ML books and get answers with source references and YouTube video links — all running 100% free and offline.
+> A local RAG (Retrieval-Augmented Generation) chatbot that lets you ask questions about AI/ML books and get accurate answers powered by **Groq LLM**, with source references and YouTube video links.
 
 
 ## ✨ Features
 
 - 📖 **5 AI/ML Books** — Agentic AI, Deep Learning (Ian Goodfellow), LLM, Machine Learning, NLP
-- 🔍 **Semantic Search** — Retrieves the most relevant passages using vector similarity
-- 🤖 **Local AI Answers** — Generates answers using a free HuggingFace QA model, no API key needed
+- 🔍 **Semantic Search** — Retrieves the most relevant passages using ChromaDB vector similarity
+- ⚡ **Groq LLM Answers** — Fast, accurate answers powered by `llama3-8b-8192` via Groq API
 - 📄 **Source References** — Every answer shows the exact book, page number, and passage
 - ▶️ **YouTube Videos** — Automatically finds related YouTube tutorials for every question
 - 🎨 **Sleek Dark UI** — Black and dark red Streamlit interface with persistent chat history
-- 💾 **Fully Local** — All embeddings and vector storage run on your machine
+- 💾 **Local Embeddings** — HuggingFace embeddings run fully on your machine, no extra cost
 
 ---
 
@@ -20,12 +20,13 @@
 ```
 User: What is the attention mechanism?
 
-RAGwise: Attention is a mechanism that helps the model incorporate context
-as it's processing a specific token. It allows the model to attend to
-certain parts of sequences that relate more or less to one another...
+RAGwise: The attention mechanism allows a model to focus on the most
+relevant parts of the input sequence when generating each output token.
+It computes weighted relationships between all tokens simultaneously,
+enabling the model to capture long-range dependencies...
 
-📄 Source: LLM.pdf — Page 112
-▶️ YouTube: "Attention Mechanism in Transformers Explained" — Andrej Karpathy
+📄 Source: LLM.pdf — Page 112 — Score: 0.1857
+▶️ YouTube: "Attention Mechanism in Transformers Explained"
 ```
 
 ---
@@ -36,19 +37,20 @@ certain parts of sequences that relate more or less to one another...
 RAGwise/
 ├── data/
 │   ├── pdf/
-│   │   ├── Agentic_AI/               # Agentic-AI.pdf
-│   │   ├── Deep_Learning/            # Deep+Learning+Ian+Goodfellow.pdf
-│   │   ├── Large_Language_Model/     # LLM.pdf
-│   │   ├── Machine_Learning/         # machine_learning.pdf
-│   │   └── Natural_language_Processing/ # Natural Language Processing-1.pdf
-│   └── chroma_db/                    # Auto-generated (run vectorize_book.py)
+│   │   ├── Agentic_AI/                   # Agentic-AI.pdf
+│   │   ├── Deep_Learning/                # Deep+Learning+Ian+Goodfellow.pdf
+│   │   ├── Large_Language_Model/         # LLM.pdf
+│   │   ├── Machine_Learning/             # machine_learning.pdf
+│   │   └── Natural_language_Processing/  # Natural Language Processing-1.pdf
+│   └── chroma_db/                        # Auto-generated (run vectorize_book.py)
 ├── src/
-│   ├── main.py                       # Streamlit chatbot UI
-│   ├── chatbot_utility.py            # RAG pipeline (retrieve + answer)
-│   ├── get_youtube_video.py          # YouTube video search
-│   ├── vectorize_book.py             # PDF → ChromaDB embeddings
-│   └── vectorize_script.py          # CLI retrieval tester
-├── .env                              # Environment variables
+│   ├── main.py                           # Streamlit chatbot UI
+│   ├── chatbot_utility.py                # RAG pipeline (retrieve + Groq answer)
+│   ├── get_youtube_video.py              # YouTube video search
+│   ├── vectorize_book.py                 # PDF → ChromaDB embeddings
+│   └── vectorize_script.py              # CLI retrieval tester
+├── .env                                  # API keys (never commit this!)
+├── .gitignore
 ├── requirements.txt
 └── README.md
 ```
@@ -58,8 +60,8 @@ RAGwise/
 ## ⚙️ Setup & Installation
 
 ### Prerequisites
-- Python **3.11.15** (recommended — other versions may have compatibility issues)
-- Git
+- Python **3.11.15** (recommended)
+- A free [Groq API key](https://console.groq.com) — takes 1 minute to get
 
 ### 1. Clone the repository
 ```bash
@@ -81,11 +83,19 @@ source .venv/bin/activate
 ### 3. Install dependencies
 ```bash
 pip install -r requirements.txt
+pip install groq
 ```
 
-### 4. Add your PDF books
-Place your PDF files in the correct folders under `data/pdf/`:
+### 4. Set up your .env file
+Create a `.env` file in the project root:
+```env
+GROQ_API_KEY=your_groq_api_key_here
+```
 
+Get your free API key at 👉 https://console.groq.com
+
+### 5. Add your PDF books
+Place your PDF files in the correct folders under `data/pdf/`:
 ```
 data/pdf/Agentic_AI/Agentic-AI.pdf
 data/pdf/Deep_Learning/Deep+Learning+Ian+Goodfellow.pdf
@@ -94,31 +104,31 @@ data/pdf/Machine_Learning/machine_learning.pdf
 data/pdf/Natural_language_Processing/Natural Language Processing-1.pdf
 ```
 
-### 5. Vectorize the books
-This step processes all PDFs and stores embeddings in ChromaDB. Run it once:
+### 6. Vectorize the books
+Run once to process all PDFs and store embeddings in ChromaDB:
 ```bash
 python src/vectorize_book.py
 ```
 
-> ⏳ This may take several minutes depending on book size. Deep Learning (Ian Goodfellow) has ~25,000 chunks.
+> ⏳ This may take several minutes. The Deep Learning book has ~25,000 chunks.
 
-### 6. Run the chatbot
+### 7. Run the chatbot
 ```bash
 python -m streamlit run src/main.py
 ```
 
-Open your browser at `http://localhost:8501`
+Open your browser at `http://localhost:8501` 🚀
 
 ---
 
 ## 🧪 Testing Retrieval (Optional)
 
-Before running the full chatbot, you can test retrieval from the CLI:
+Test raw retrieval from the CLI before running the full chatbot:
 ```bash
 python src/vectorize_script.py
 ```
 
-Then choose a collection and type a query to see the raw retrieved chunks.
+Choose a collection and type a query to see the retrieved chunks with scores.
 
 ---
 
@@ -127,12 +137,12 @@ Then choose a collection and type a query to see the raw retrieved chunks.
 | Package | Version | Purpose |
 |---|---|---|
 | streamlit | 1.49.1 | Web UI |
+| groq | latest | Groq LLM API |
 | langchain-community | 0.3.29 | PDF loading, vector utils |
 | langchain-chroma | 0.2.5 | ChromaDB integration |
 | langchain-huggingface | 0.3.1 | HuggingFace embeddings |
 | langchain-text-splitters | 0.3.11 | Document chunking |
 | sentence-transformers | 5.1.0 | Embedding model |
-| transformers | 4.56.0 | QA model |
 | unstructured[pdf] | 0.18.14 | PDF parsing |
 | chromadb | latest | Vector database |
 | youtube-search-python | 1.6.6 | YouTube search |
@@ -142,12 +152,10 @@ Then choose a collection and type a query to see the raw retrieved chunks.
 
 ## 🤖 Models Used
 
-| Model | Task | Source |
+| Model | Task | Provider |
 |---|---|---|
-| `sentence-transformers/all-MiniLM-L6-v2` | Text embeddings | HuggingFace |
-| `deepset/roberta-base-squad2` | Question answering | HuggingFace |
-
-Both models are free, local, and require no API key.
+| `llama3-8b-8192` | Answer generation | Groq API (free) |
+| `sentence-transformers/all-MiniLM-L6-v2` | Text embeddings | HuggingFace (local) |
 
 ---
 
@@ -165,10 +173,11 @@ Both models are free, local, and require no API key.
 
 ## ⚠️ Notes
 
-- `data/chroma_db/` is excluded from Git (too large). Regenerate it locally by running `vectorize_book.py`.
-- PDF files are also excluded. Add them manually after cloning.
-- The `Cannot set stroke color` warnings during vectorization are harmless — they come from the PDF renderer and don't affect text extraction.
-- For best compatibility use **Python 3.11.15**. Python 3.13+ may cause DLL issues with ChromaDB on Windows.
+- **Never commit your `.env` file** — it contains your API key. It is already in `.gitignore`.
+- `data/chroma_db/` is excluded from Git (file too large). Regenerate locally by running `vectorize_book.py`.
+- PDF files are excluded from Git. Add them manually after cloning.
+- The `Cannot set stroke color` warnings during vectorization are harmless.
+- Use **Python 3.11.15** for best compatibility. Python 3.13+ causes DLL issues with ChromaDB on Windows.
 
 ---
 
@@ -179,5 +188,5 @@ This project is for educational purposes.
 ---
 
 <div align="center">
-  Built with ❤️ using LangChain · ChromaDB · HuggingFace · Streamlit
+  Built with ❤️ using Groq · LangChain · ChromaDB · HuggingFace · Streamlit
 </div>
