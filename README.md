@@ -7,7 +7,7 @@
 
 - 📖 **5 AI/ML Books** — Agentic AI, Deep Learning (Ian Goodfellow), LLM, Machine Learning, NLP
 - 🔍 **Semantic Search** — Retrieves the most relevant passages using ChromaDB vector similarity
-- ⚡ **Groq LLM Answers** — Fast, accurate answers powered by `llama3-8b-8192` via Groq API
+- ⚡ **Grok LLM Answers** — Fast, accurate answers powered by xAI's Grok API
 - 📄 **Source References** — Every answer shows the exact book, page number, and passage
 - ▶️ **YouTube Videos** — Automatically finds related YouTube tutorials for every question
 - 🎨 **Sleek Dark UI** — Black and dark red Streamlit interface with persistent chat history
@@ -61,7 +61,7 @@ RAGwise/
 
 ### Prerequisites
 - Python **3.11.15** (recommended)
-- A free [Groq API key](https://console.groq.com) — takes 1 minute to get
+- An [xAI Grok API key](https://console.x.ai) — sign up at x.ai
 
 ### 1. Clone the repository
 ```bash
@@ -83,16 +83,17 @@ source .venv/bin/activate
 ### 3. Install dependencies
 ```bash
 pip install -r requirements.txt
-pip install groq
+pip install anthropic  # xAI Grok uses OpenAI-compatible SDK
+pip install openai
 ```
 
 ### 4. Set up your .env file
 Create a `.env` file in the project root:
 ```env
-GROQ_API_KEY=your_groq_api_key_here
+GROK_API_KEY=your_grok_api_key_here
 ```
 
-Get your free API key at 👉 https://console.groq.com
+Get your API key at 👉 https://console.x.ai
 
 ### 5. Add your PDF books
 Place your PDF files in the correct folders under `data/pdf/`:
@@ -137,7 +138,7 @@ Choose a collection and type a query to see the retrieved chunks with scores.
 | Package | Version | Purpose |
 |---|---|---|
 | streamlit | 1.49.1 | Web UI |
-| groq | latest | Groq LLM API |
+| openai | latest | xAI Grok API (OpenAI-compatible) |
 | langchain-community | 0.3.29 | PDF loading, vector utils |
 | langchain-chroma | 0.2.5 | ChromaDB integration |
 | langchain-huggingface | 0.3.1 | HuggingFace embeddings |
@@ -154,7 +155,7 @@ Choose a collection and type a query to see the retrieved chunks with scores.
 
 | Model | Task | Provider |
 |---|---|---|
-| `llama3-8b-8192` | Answer generation | Groq API (free) |
+| `grok-beta` | Answer generation | xAI Grok API |
 | `sentence-transformers/all-MiniLM-L6-v2` | Text embeddings | HuggingFace (local) |
 
 ---
@@ -173,7 +174,7 @@ Choose a collection and type a query to see the retrieved chunks with scores.
 
 ## ⚠️ Notes
 
-- **Never commit your `.env` file** — it contains your API key. It is already in `.gitignore`.
+- **Never commit your `.env` file** — it contains your Grok API key. It is already in `.gitignore`.
 - `data/chroma_db/` is excluded from Git (file too large). Regenerate locally by running `vectorize_book.py`.
 - PDF files are excluded from Git. Add them manually after cloning.
 - The `Cannot set stroke color` warnings during vectorization are harmless.
@@ -188,5 +189,5 @@ This project is for educational purposes.
 ---
 
 <div align="center">
-  Built with ❤️ using Groq · LangChain · ChromaDB · HuggingFace · Streamlit
+  Built with ❤️ using xAI Grok · LangChain · ChromaDB · HuggingFace · Streamlit
 </div>
